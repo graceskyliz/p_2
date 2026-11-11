@@ -1,0 +1,31 @@
+{
+  "n": 9,
+  "aristas": [
+    [0, 1],
+    [0, 2],
+    [1, 3],
+    [1, 4],
+    [2, 5],
+    [2, 6],
+    [4, 7],
+    [7, 8]
+  ],
+  "diametro": 6,
+  "nodo_u": 8,
+  "nodo_v": 5,
+  "camino": [8, 7, 4, 1, 0, 2, 5],
+  "bfs1": {
+    "inicio": 0,
+    "nodo_lejano": 8,
+    "distancia_max": 4,
+    "orden_visita": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "distancias": [0, 1, 1, 2, 2, 2, 2, 3, 4]
+  },
+  "bfs2": {
+    "inicio": 8,
+    "nodo_lejano": 5,
+    "distancia_max": 6,
+    "orden_visita": [8, 7, 4, 1, 0, 3, 2, 5, 6],
+    "distancias": [4, 3, 5, 4, 2, 6, 6, 1, 0]
+  }
+}
