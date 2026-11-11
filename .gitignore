@@ -2,5 +2,6 @@ main
 test_runner
 *.o
 output/fotogramas/
+*.mp4
 __pycache__/
 *.pyc
