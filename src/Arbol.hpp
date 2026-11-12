@@ -3,20 +3,21 @@
 
 #include <vector>
 #include <string>
+using namespace std;
 
 struct ResultadoBFS {
     int nodoMasLejano;
     int distanciaMax;
-    std::vector<int> distancias;
-    std::vector<int> padres;
-    std::vector<int> ordenVisita;
+    vector<int> distancias;
+    vector<int> padres;
+    vector<int> ordenVisita;
 };
 
 struct ResultadoDiametro {
     int diametro;
     int nodoU;
     int nodoV;
-    std::vector<int> camino;
+    vector<int> camino;
     ResultadoBFS bfs1;
     ResultadoBFS bfs2;
 };
@@ -24,7 +25,7 @@ struct ResultadoDiametro {
 class Arbol {
 private:
     int n;
-    std::vector<std::vector<int>> adj;
+    vector<vector<int>> adj;
 
 public:
     Arbol();
@@ -32,12 +33,13 @@ public:
 
     void agregarArista(int u, int v);
     int obtenerN() const;
-    const std::vector<std::vector<int>>& obtenerAdyacencia() const;
+    const vector<vector<int>>& obtenerAdyacencia() const;
 
     ResultadoBFS ejecutarBFS(int inicio) const;
     ResultadoDiametro calcularDiametro(int nodoInicial = 0) const;
 
-    void exportarTraza(const std::string& rutaArchivo, const ResultadoDiametro& resultado) const;
+    void exportarTraza(const string& rutaArchivo, const ResultadoDiametro& resultado) const;
 };
 
 #endif
+

@@ -1,6 +1,7 @@
 #include "../src/Arbol.hpp"
 #include <iostream>
 #include <cassert>
+using namespace std;
 
 void testUnSoloNodo() {
     Arbol a(1);
@@ -8,7 +9,7 @@ void testUnSoloNodo() {
     assert(res.diametro == 0);
     assert(res.camino.size() == 1);
     assert(res.camino[0] == 0);
-    std::cout << "[PASS] Test Un Solo Nodo" << std::endl;
+    cout << "[PASS] Test Un Solo Nodo" << endl;
 }
 
 void testDosNodos() {
@@ -17,7 +18,7 @@ void testDosNodos() {
     ResultadoDiametro res = a.calcularDiametro(0);
     assert(res.diametro == 1);
     assert(res.camino.size() == 2);
-    std::cout << "[PASS] Test Dos Nodos" << std::endl;
+    cout << "[PASS] Test Dos Nodos" << endl;
 }
 
 void testGrafoEstrella() {
@@ -28,7 +29,7 @@ void testGrafoEstrella() {
     ResultadoDiametro res = a.calcularDiametro(0);
     assert(res.diametro == 2);
     assert(res.camino.size() == 3);
-    std::cout << "[PASS] Test Grafo Estrella" << std::endl;
+    cout << "[PASS] Test Grafo Estrella" << endl;
 }
 
 void testGrafoLinea() {
@@ -39,7 +40,7 @@ void testGrafoLinea() {
     ResultadoDiametro res = a.calcularDiametro(2);
     assert(res.diametro == 4);
     assert(res.camino.size() == 5);
-    std::cout << "[PASS] Test Grafo Linea" << std::endl;
+    cout << "[PASS] Test Grafo Linea" << endl;
 }
 
 void testArbolBinarioCompleto() {
@@ -53,7 +54,7 @@ void testArbolBinarioCompleto() {
     ResultadoDiametro res = a.calcularDiametro(0);
     assert(res.diametro == 4);
     assert(res.camino.size() == 5);
-    std::cout << "[PASS] Test Arbol Binario Completo" << std::endl;
+    cout << "[PASS] Test Arbol Binario Completo" << endl;
 }
 
 void testArbolAsimetrico() {
@@ -69,17 +70,18 @@ void testArbolAsimetrico() {
     ResultadoDiametro res = a.calcularDiametro(0);
     assert(res.diametro == 6);
     assert(res.camino.size() == 7);
-    std::cout << "[PASS] Test Arbol Asimetrico" << std::endl;
+    cout << "[PASS] Test Arbol Asimetrico" << endl;
 }
 
 int main() {
-    std::cout << "--- Ejecutando Pruebas Unitarias del Arbol ---" << std::endl;
+    cout << "--- Ejecutando Pruebas Unitarias del Arbol ---" << endl;
     testUnSoloNodo();
     testDosNodos();
     testGrafoEstrella();
     testGrafoLinea();
     testArbolBinarioCompleto();
     testArbolAsimetrico();
-    std::cout << "--- Todas las pruebas pasaron con exito! ---" << std::endl;
+    cout << "--- Todas las pruebas pasaron con exito! ---" << endl;
     return 0;
 }
+

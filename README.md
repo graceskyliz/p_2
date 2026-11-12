@@ -1,108 +1,106 @@
-# CS2023 - Algoritmos y Estructuras de Datos (2026-2)
-## Proyecto 2: Animando Estructuras de Datos
-### Tema Asignado: Diámetro de un Árbol (Avance al 50%)
+# Proyecto 2: Diámetro de un Árbol
+**CS2023 - Algoritmos y Estructuras de Datos (2026-2)**  
+**Profesor:** Luciano A. Romero Calla  
 
 ---
 
-## 1. Introducción y Descripción del Problema
-
-El **diámetro de un árbol** es la longitud del camino simple más largo entre cualquier par de nodos pertenecientes al árbol. En un árbol no ponderado, esta longitud corresponde al número total de aristas que conectan ambos extremos.
-
-Encontrar el diámetro de manera ingenua mediante la búsqueda de caminos entre todos los pares de nodos tomaría $O(V^2)$ o $O(V^3)$. Sin embargo, aprovechando la propiedad acíclica y conexa de los árboles, es posible calcularlo en tiempo estrictamente lineal $O(V + E) = O(V)$ mediante dos recorridos BFS (o DFS):
-
-1. **Primer BFS:** Se inicia en un nodo arbitrario $s$. Se calcula la distancia a todos los nodos y se identifica el nodo más alejado $u$.
-2. **Segundo BFS:** Se inicia en el nodo $u$. Se calcula la distancia hacia todos los nodos y se identifica el nodo más alejado $v$.
-3. **Resultado:** La distancia entre $u$ y $v$ es exactamente el diámetro del árbol, y el camino recorrido entre ambos corresponde al camino diametral.
+## Integrantes
+- Integrante 1 (Código)
+- Integrante 2 (Código)
+- Integrante 3 (Código)
 
 ---
 
-## 2. Estado del Proyecto: Hito del 50% (Avance)
+## 1. Descripción del Proyecto
 
-Este repositorio corresponde a la entrega intermedia del **50% del proyecto** (fecha de avance: 11 de noviembre de 2026), cumpliendo con los siguientes objetivos:
+El objetivo de este proyecto es implementar y explicar de forma visual el algoritmo para encontrar el **diámetro de un árbol** no ponderado. El diámetro se define como la mayor distancia (en cantidad de aristas) entre cualquier par de nodos del árbol.
 
-- [x] Estructura de datos `Arbol` implementada en C++ con lista de adyacencia.
-- [x] Algoritmo de doble BFS implementado en C++ para encontrar el diámetro y reconstruir el camino.
-- [x] Generación y exportación de trazas de ejecución en formato estructurado JSON (`output/traza.json`).
-- [x] Suite de pruebas unitarias (`tests/test_arbol.cpp`) cubriendo casos base y casos de borde.
-- [x] Prototipo funcional del generador de animación educativa (`animacion/animador.py`) usando Pillow y FFmpeg.
-- [x] Generación del video educativo preliminar en MP4 (`output/video_diametro.mp4`).
-- [x] Documentación técnica e informe de avance de 50% (`docs/informe_avance_50.md`).
+Para calcularlo de forma eficiente sin recurrir a fuerza bruta ($O(V^2)$), utilizamos el algoritmo de dos recorridos BFS (Búsqueda en Anchura) que opera en tiempo lineal $O(V)$:
+1. Se realiza un primer BFS a partir de un nodo inicial cualquiera (nodo 0) para encontrar el nodo más distante $u$.
+2. Se realiza un segundo BFS partiendo desde $u$ para encontrar el nodo más distante $v$.
+3. La distancia obtenida entre $u$ y $v$ corresponde al diámetro del árbol, y mediante el arreglo de padres se reconstruye el camino completo.
+
+El núcleo algorítmico y la estructura del árbol están programados en C++, la cual exporta los datos de ejecución a un archivo `output/traza.json`. Luego, un script en Python toma dicha traza y genera un video en formato MP4 (`output/video_diametro.mp4`) utilizando Pillow y FFmpeg para mostrar paso a paso la propagación de cada búsqueda.
 
 ---
 
-## 3. Estructura del Repositorio
+## 2. Estructura del Directorio
 
 ```text
 proyecto_2/
-├── aed_project_2.md         # Especificaciones oficiales del proyecto
-├── Makefile                 # Automatización de compilación y ejecución
-├── README.md                # Presentación general y guía de uso
-├── .gitignore               # Archivos excluidos del control de versiones
+├── aed_project_2.md          # Pautas del proyecto
+├── Makefile                  # Comandos para compilar y ejecutar
+├── .gitignore                # Exclusiones de Git
+├── README.md                 # Documentación del repositorio
 ├── docs/
-│   └── informe_avance_50.md # Informe técnico del avance del 50%
+│   └── informe_avance_50.md  # Informe del avance al 50%
 ├── src/
-│   ├── Arbol.hpp            # Definición de la clase Arbol y estructuras
-│   ├── Arbol.cpp            # Implementación de métodos y algoritmo
-│   └── main.cpp             # Demostración y exportación de traza
+│   ├── Arbol.hpp             # Declaración de la clase Arbol y estructuras
+│   ├── Arbol.cpp             # Implementación de adyacencia y doble BFS
+│   └── main.cpp              # Ejecución de ejemplo y exportación de traza
 ├── tests/
-│   └── test_arbol.cpp       # Pruebas unitarias de casos de borde
+│   └── test_arbol.cpp        # Pruebas unitarias para distintos casos
 ├── animacion/
-│   └── animador.py          # Script de renderizado y generación de video MP4
+│   └── animador.py           # Generación de la animación y compilación a MP4
 └── output/
-    ├── traza.json           # Traza generada por el motor C++
-    └── video_diametro.mp4   # Video de la animación generada
+    └── traza.json            # Traza generada por el ejecutable en C++
 ```
 
 ---
 
-## 4. Requisitos del Sistema
+## 3. Requisitos del Sistema
 
-Para compilar y ejecutar el proyecto se requieren las siguientes herramientas estándar:
-
-- **Compilador C++:** `g++` con soporte para C++17.
-- **Python:** Versión 3.8 o superior.
-- **Librería de imágenes:** `Pillow` (`pip install Pillow`).
-- **Codificador multimedia:** `ffmpeg` disponible en el `PATH` del sistema.
+- `g++` (con soporte para C++17)
+- `python3`
+- Librería `Pillow` de Python (`pip install Pillow`)
+- `ffmpeg` instalado y accesible en la terminal
 
 ---
 
-## 5. Instrucciones de Compilación y Ejecución
+## 4. Instrucciones de Uso
 
-### 5.1 Compilar y ejecutar el programa principal en C++
+### Compilar y ejecutar el programa en C++
 ```bash
 make run
 ```
-Este comando compila el proyecto y ejecuta `main`, el cual calcula el diámetro de un árbol de ejemplo y genera el archivo `output/traza.json`.
+Compila el código fuente, calcula el diámetro sobre un árbol de prueba de 9 nodos y genera el archivo `output/traza.json`.
 
-### 5.2 Ejecutar la suite de pruebas unitarias
+### Ejecutar las pruebas unitarias
 ```bash
 make test
 ```
-Ejecuta las pruebas automatizadas que verifican la corrección del algoritmo ante casos de borde:
-- Árbol de un solo nodo ($N=1$).
-- Árbol de dos nodos ($N=2$).
-- Grafo estrella.
-- Grafo camino / línea.
-- Árbol binario completo simétrico.
-- Árbol asimétrico arbitrario.
+Ejecuta la batería de pruebas que comprueba el algoritmo ante casos de borde:
+- Árbol con un solo nodo ($N=1$).
+- Árbol con dos nodos ($N=2$).
+- Grafo en estrella.
+- Grafo en línea / camino simple.
+- Árbol binario simétrico.
+- Árbol asimétrico general.
 
-### 5.3 Generar el video educativo completo
+### Generar la animación en video
 ```bash
 make video
 ```
-Este comando compila la lógica en C++, ejecuta el algoritmo para producir la traza y dispara el generador gráfico en Python para renderizar los fotogramas y ensamblar `output/video_diametro.mp4`.
+Compila y corre el ejecutable en C++, y a continuación ejecuta el script de animación para generar `output/video_diametro.mp4`.
 
-### 5.4 Limpiar archivos generados
+### Limpiar archivos generados
 ```bash
 make clean
 ```
 
 ---
 
-## 6. Próximos Pasos (Hacia el 100% Final)
+## 5. Estado del Avance (Hito del 50%)
 
-Para la entrega final del 20 de noviembre de 2026, se desarrollará el 50% restante:
-1. Incorporación de locución / narración de voz sintetizada o grabada y sincronización de subtítulos.
-2. Animación de variantes adicionales (comparación conceptual con programación dinámica sobre árboles y árboles con pesos en aristas).
-3. Afinamiento visual de transiciones fluidas de nodos (estilo Manim a 60 fps).
-4. Redacción del informe final en formato PDF (máximo 4 páginas) con el enlace definitivo del video en YouTube/Drive.
+A la fecha (11 de noviembre de 2026), se ha completado:
+- Implementación de la clase `Arbol` usando listas de adyacencia.
+- Algoritmo de dos BFS y reconstrucción del camino diametral en C++.
+- Exportación estructurada de los pasos en formato JSON.
+- Suite de pruebas unitarias cubriendo casos normales y límites.
+- Script de animación funcional que traduce la traza en fotogramas y compila el video en MP4.
+- Redacción del informe de avance intermedio.
+
+Trabajo restante para la entrega final (20 de noviembre de 2026):
+- Grabación de la narración de voz para el video explicativo.
+- Incorporación de subtítulos y ajustes finales de edición.
+- Elaboración del informe final en PDF (máximo 4 páginas) con los enlaces de entrega.

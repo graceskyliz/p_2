@@ -2,10 +2,9 @@
 #include <iostream>
 
 int main() {
-    std::cout << "========================================" << std::endl;
-    std::cout << "  AED - Proyecto 2: Diametro de un Arbol" << std::endl;
-    std::cout << "  Avance 50% - Motor y Algoritmo" << std::endl;
-    std::cout << "========================================" << std::endl;
+    std::cout << "Proyecto 2: Diametro de un Arbol" << std::endl;
+    std::cout << "CS2023 - Algoritmos y Estructuras de Datos" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
 
     Arbol arbol(9);
     arbol.agregarArista(0, 1);
@@ -17,19 +16,19 @@ int main() {
     arbol.agregarArista(4, 7);
     arbol.agregarArista(7, 8);
 
-    std::cout << "Arbol construido con " << arbol.obtenerN() << " nodos." << std::endl;
+    std::cout << "Nodos en el arbol: " << arbol.obtenerN() << std::endl;
 
     ResultadoDiametro resultado = arbol.calcularDiametro(0);
 
-    std::cout << "\n[Fase 1: Primer BFS desde nodo inicial 0]" << std::endl;
-    std::cout << "Nodo mas lejano alcanzado (u): " << resultado.nodoU << std::endl;
-    std::cout << "Distancia desde el inicio: " << resultado.bfs1.distanciaMax << std::endl;
+    std::cout << "\nPrimer BFS (desde nodo 0):" << std::endl;
+    std::cout << "Nodo mas lejano encontrado: " << resultado.nodoU << std::endl;
+    std::cout << "Distancia: " << resultado.bfs1.distanciaMax << std::endl;
 
-    std::cout << "\n[Fase 2: Segundo BFS desde el nodo u = " << resultado.nodoU << "]" << std::endl;
-    std::cout << "Nodo mas lejano alcanzado (v): " << resultado.nodoV << std::endl;
-    std::cout << "Diametro del arbol: " << resultado.diametro << std::endl;
+    std::cout << "\nSegundo BFS (desde nodo " << resultado.nodoU << "):" << std::endl;
+    std::cout << "Nodo mas lejano encontrado: " << resultado.nodoV << std::endl;
+    std::cout << "Diametro: " << resultado.diametro << std::endl;
 
-    std::cout << "\n[Camino Diametral]" << std::endl;
+    std::cout << "\nCamino diametral: ";
     for (size_t i = 0; i < resultado.camino.size(); ++i) {
         std::cout << resultado.camino[i];
         if (i + 1 < resultado.camino.size()) {
@@ -40,7 +39,7 @@ int main() {
 
     std::string rutaSalida = "output/traza.json";
     arbol.exportarTraza(rutaSalida, resultado);
-    std::cout << "\nTraza de ejecucion exportada a: " << rutaSalida << std::endl;
+    std::cout << "\nTraza guardada en: " << rutaSalida << std::endl;
 
     return 0;
 }

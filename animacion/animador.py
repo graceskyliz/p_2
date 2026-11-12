@@ -28,7 +28,7 @@ def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtit
     f_dist = obtener_fuente(14)
     f_fase = obtener_fuente(18)
 
-    draw.text((40, 25), "AED - Diametro de un Arbol", font=f_titulo, fill=(240, 246, 252))
+    draw.text((40, 25), "CS2023 - Diametro de un Arbol", font=f_titulo, fill=(240, 246, 252))
     draw.text((40, 65), fase_texto, font=f_fase, fill=(88, 166, 255))
     draw.text((40, 95), subtitulo, font=f_sub, fill=(201, 209, 217))
 
@@ -66,7 +66,7 @@ def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtit
 
     draw.rectangle([(40, 650), (1240, 695)], fill=(30, 36, 48), outline=(55, 65, 81), width=1)
     f_pie = obtener_fuente(16)
-    draw.text((60, 663), "Gris: no visitado | Azul: BFS 1 | Violeta: BFS 2 | Naranja/Rojo: Extremos u,v | Dorado: Camino Diametral", font=f_pie, fill=(156, 163, 175))
+    draw.text((60, 663), "Gris: sin visitar | Azul: BFS 1 | Violeta: BFS 2 | Naranja/Rojo: Extremos | Amarillo: Camino", font=f_pie, fill=(156, 163, 175))
 
 def generar_fotogramas(data, carpeta_salida):
     if os.path.exists(carpeta_salida):
@@ -94,10 +94,10 @@ def generar_fotogramas(data, carpeta_salida):
     for _ in range(60):
         img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
         draw = ImageDraw.Draw(img)
-        draw.text((200, 200), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
+        draw.text((200, 200), "CS2023 - Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
         draw.text((200, 260), "Diametro de un Arbol", font=f_intro_t, fill=(255, 255, 255))
-        draw.text((200, 350), "Algoritmo de Doble BFS en Tiempo O(V + E)", font=f_intro_s, fill=(234, 179, 8))
-        draw.text((200, 420), "Proyecto 2 - Avance 50%: Motor en C++ y Visualizacion", font=f_intro_b, fill=(156, 163, 175))
+        draw.text((200, 350), "Algoritmo de los dos BFS en tiempo O(V + E)", font=f_intro_s, fill=(234, 179, 8))
+        draw.text((200, 420), "Proyecto 2 - Integrantes del Grupo", font=f_intro_b, fill=(156, 163, 175))
         draw.line([(200, 325), (1080, 325)], fill=(55, 65, 81), width=2)
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
@@ -110,8 +110,8 @@ def generar_fotogramas(data, carpeta_salida):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas,
-                      "El diametro es la mayor distancia (numero de aristas) entre dos nodos del arbol.",
-                      distancias, "Introduccion: Definicion y Grafo Base")
+                      "El diametro es la mayor distancia en aristas entre dos nodos cualesquiera.",
+                      distancias, "Definicion del problema")
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -127,9 +127,9 @@ def generar_fotogramas(data, carpeta_salida):
         for _ in range(num_frames):
             img = Image.new("RGB", (1280, 720))
             draw = ImageDraw.Draw(img)
-            sub = f"Explorando nodo {u} | Distancia desde nodo inicial ({inicio_bfs1}) = {dists1[u]}"
+            sub = f"Visitando nodo {u} | Distancia calculada = {dists1[u]}"
             dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                          f"Fase 1: Primer BFS desde el nodo {inicio_bfs1}")
+                          f"Paso 1: Primer BFS desde el nodo {inicio_bfs1}")
             img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
             fotograma += 1
 
@@ -138,9 +138,9 @@ def generar_fotogramas(data, carpeta_salida):
     for _ in range(45):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
-        sub = f"Fin Fase 1: Nodo mas lejano encontrado es u = {nodo_u} (distancia maxima = {bfs1['distancia_max']})"
+        sub = f"Nodo mas lejano alcanzado: u = {nodo_u} (distancia maxima = {bfs1['distancia_max']})"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      "Fase 1 Completada: Vertice Extremo Identificado")
+                      "Fin del Paso 1: Primer extremo encontrado")
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -160,9 +160,9 @@ def generar_fotogramas(data, carpeta_salida):
         for _ in range(num_frames):
             img = Image.new("RGB", (1280, 720))
             draw = ImageDraw.Draw(img)
-            sub = f"Explorando nodo {u} | Distancia desde vertice u ({nodo_u}) = {dists2[u]}"
+            sub = f"Visitando nodo {u} | Distancia desde nodo {nodo_u} = {dists2[u]}"
             dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                          f"Fase 2: Segundo BFS desde el vertice extremo u = {nodo_u}")
+                          f"Paso 2: Segundo BFS desde el extremo u = {nodo_u}")
             img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
             fotograma += 1
 
@@ -171,9 +171,9 @@ def generar_fotogramas(data, carpeta_salida):
     for _ in range(45):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
-        sub = f"Fin Fase 2: Nodo mas lejano alcanzado es v = {nodo_v} (distancia maxima = {bfs2['distancia_max']})"
+        sub = f"Nodo mas lejano alcanzado: v = {nodo_v} (distancia maxima = {bfs2['distancia_max']})"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      "Fase 2 Completada: Vertice Opuesto Identificado")
+                      "Fin del Paso 2: Segundo extremo encontrado")
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -191,28 +191,28 @@ def generar_fotogramas(data, carpeta_salida):
     for _ in range(75):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
-        sub = f"Camino: [{camino_str}] | Longitud (Diametro) = {data['diametro']} aristas"
+        sub = f"Camino: {camino_str} | Diametro = {data['diametro']} aristas"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      f"Fase 3: Reconstruccion del Diametro = {data['diametro']}")
+                      f"Paso 3: Camino diametral (Longitud = {data['diametro']})")
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
     for _ in range(60):
         img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
         draw = ImageDraw.Draw(img)
-        draw.text((150, 140), "Analisis de Complejidad Temporal y Espacial", font=f_intro_t, fill=(255, 255, 255))
+        draw.text((150, 140), "Analisis de Complejidad", font=f_intro_t, fill=(255, 255, 255))
         draw.line([(150, 210), (1130, 210)], fill=(55, 65, 81), width=2)
         
         draw.text((150, 250), "1. Primer BFS desde nodo inicial:", font=f_intro_s, fill=(88, 166, 255))
-        draw.text((200, 295), "O(|V| + |E|) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
+        draw.text((200, 295), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
 
         draw.text((150, 360), "2. Segundo BFS desde nodo u:", font=f_intro_s, fill=(168, 85, 247))
-        draw.text((200, 405), "O(|V| + |E|) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
+        draw.text((200, 405), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
 
         draw.text((150, 470), "3. Reconstruccion del camino:", font=f_intro_s, fill=(16, 185, 129))
         draw.text((200, 515), "O(D) <= O(N), donde D es el diametro", font=f_intro_b, fill=(201, 209, 217))
 
-        draw.text((150, 580), "Complejidad Total: O(N) tiempo  |  O(N) memoria auxiliar", font=f_intro_s, fill=(234, 179, 8))
+        draw.text((150, 580), "Tiempo total: O(N) lineal  |  Memoria auxiliar: O(N)", font=f_intro_s, fill=(234, 179, 8))
 
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
@@ -222,20 +222,17 @@ def generar_fotogramas(data, carpeta_salida):
 def main():
     ruta_traza = "output/traza.json"
     if not os.path.exists(ruta_traza):
-        print(f"Error: No se encontro el archivo de traza {ruta_traza}.")
-        print("Ejecuta primero el programa principal en C++: make run")
+        print(f"Error: no se encontro {ruta_traza}")
+        print("Ejecuta primero: make run")
         sys.exit(1)
 
     with open(ruta_traza, "r") as f:
         data = json.load(f)
 
     carpeta_fotogramas = "output/fotogramas"
-    print(f"Generando fotogramas educativos a partir de {ruta_traza}...")
     total_frames = generar_fotogramas(data, carpeta_fotogramas)
-    print(f"Se generaron {total_frames} fotogramas.")
 
     video_salida = "output/video_diametro.mp4"
-    print(f"Compilando video con ffmpeg hacia {video_salida}...")
     
     cmd = [
         "ffmpeg", "-y",
@@ -259,11 +256,10 @@ def main():
         res = subprocess.run(cmd_fallback, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if res.returncode == 0:
-        print(f"Video generado exitosamente: {video_salida}")
+        print(f"Video generado en: {video_salida}")
         shutil.rmtree(carpeta_fotogramas)
     else:
-        print("Error al generar el video con ffmpeg:")
-        print(res.stderr)
+        print("Error al generar el video con ffmpeg")
         sys.exit(1)
 
 if __name__ == "__main__":

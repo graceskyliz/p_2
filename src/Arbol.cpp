@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+using namespace std;
 
 Arbol::Arbol() : n(0) {}
 
@@ -19,7 +20,7 @@ int Arbol::obtenerN() const {
     return n;
 }
 
-const std::vector<std::vector<int>>& Arbol::obtenerAdyacencia() const {
+const vector<vector<int>>& Arbol::obtenerAdyacencia() const {
     return adj;
 }
 
@@ -34,7 +35,7 @@ ResultadoBFS Arbol::ejecutarBFS(int inicio) const {
     res.distancias.assign(n, -1);
     res.padres.assign(n, -1);
     
-    std::queue<int> cola;
+    queue<int> cola;
     res.distancias[inicio] = 0;
     cola.push(inicio);
 
@@ -93,22 +94,22 @@ ResultadoDiametro Arbol::calcularDiametro(int nodoInicial) const {
     resultado.nodoV = r2.nodoMasLejano;
     resultado.diametro = r2.distanciaMax;
 
-    std::vector<int> ruta;
+    vector<int> ruta;
     int curr = r2.nodoMasLejano;
     while (curr != -1) {
         ruta.push_back(curr);
         curr = r2.padres[curr];
     }
-    std::reverse(ruta.begin(), ruta.end());
+    reverse(ruta.begin(), ruta.end());
     resultado.camino = ruta;
 
     return resultado;
 }
 
-void Arbol::exportarTraza(const std::string& rutaArchivo, const ResultadoDiametro& resultado) const {
-    std::ofstream out(rutaArchivo);
+void Arbol::exportarTraza(const string& rutaArchivo, const ResultadoDiametro& resultado) const {
+    ofstream out(rutaArchivo);
     if (!out.is_open()) {
-        std::cerr << "Error al abrir archivo para exportar traza: " << rutaArchivo << std::endl;
+        cerr << "Error al abrir archivo para exportar traza: " << rutaArchivo << endl;
         return;
     }
 
@@ -178,3 +179,4 @@ void Arbol::exportarTraza(const std::string& rutaArchivo, const ResultadoDiametr
     out << "}\n";
     out.close();
 }
+
