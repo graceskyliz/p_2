@@ -1,10 +1,11 @@
 #include "Arbol.hpp"
 #include <iostream>
+using namespace std;
 
 int main() {
-    std::cout << "Proyecto 2: Diametro de un Arbol" << std::endl;
-    std::cout << "CS2023 - Algoritmos y Estructuras de Datos" << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
+    cout << "Proyecto 2: Diametro de un Arbol" << endl;
+    cout << "CS2023 - Algoritmos y Estructuras de Datos" << endl;
+    cout << "----------------------------------------" << endl;
 
     Arbol arbol(9);
     arbol.agregarArista(0, 1);
@@ -16,30 +17,30 @@ int main() {
     arbol.agregarArista(4, 7);
     arbol.agregarArista(7, 8);
 
-    std::cout << "Nodos en el arbol: " << arbol.obtenerN() << std::endl;
+    cout << "Nodos en el arbol: " << arbol.obtenerN() << endl;
 
     ResultadoDiametro resultado = arbol.calcularDiametro(0);
 
-    std::cout << "\nPrimer BFS (desde nodo 0):" << std::endl;
-    std::cout << "Nodo mas lejano encontrado: " << resultado.nodoU << std::endl;
-    std::cout << "Distancia: " << resultado.bfs1.distanciaMax << std::endl;
+    cout << "\nPrimer BFS (desde nodo 0):" << endl;
+    cout << "Nodo mas lejano encontrado: " << resultado.nodoU << endl;
+    cout << "Distancia: " << resultado.bfs1.distanciaMax << endl;
 
-    std::cout << "\nSegundo BFS (desde nodo " << resultado.nodoU << "):" << std::endl;
-    std::cout << "Nodo mas lejano encontrado: " << resultado.nodoV << std::endl;
-    std::cout << "Diametro: " << resultado.diametro << std::endl;
+    cout << "\nSegundo BFS (desde nodo " << resultado.nodoU << "):" << endl;
+    cout << "Nodo mas lejano encontrado: " << resultado.nodoV << endl;
+    cout << "Diametro: " << resultado.diametro << endl;
 
-    std::cout << "\nCamino diametral: ";
+    cout << "\nCamino diametral: ";
     for (size_t i = 0; i < resultado.camino.size(); ++i) {
-        std::cout << resultado.camino[i];
+        cout << resultado.camino[i];
         if (i + 1 < resultado.camino.size()) {
-            std::cout << " -> ";
+            cout << " -> ";
         }
     }
-    std::cout << std::endl;
+    cout << endl;
 
-    std::string rutaSalida = "output/traza.json";
+    string rutaSalida = "output/traza.json";
     arbol.exportarTraza(rutaSalida, resultado);
-    std::cout << "\nTraza guardada en: " << rutaSalida << std::endl;
+    cout << "\nTraza guardada en: " << rutaSalida << endl;
 
     return 0;
 }

@@ -28,7 +28,7 @@ def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtit
     f_dist = obtener_fuente(14)
     f_fase = obtener_fuente(18)
 
-    draw.text((40, 25), "CS2023 - Diametro de un Arbol", font=f_titulo, fill=(240, 246, 252))
+    draw.text((40, 25), "AED - Diametro de un Arbol", font=f_titulo, fill=(240, 246, 252))
     draw.text((40, 65), fase_texto, font=f_fase, fill=(88, 166, 255))
     draw.text((40, 95), subtitulo, font=f_sub, fill=(201, 209, 217))
 
@@ -94,7 +94,7 @@ def generar_fotogramas(data, carpeta_salida):
     for _ in range(60):
         img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
         draw = ImageDraw.Draw(img)
-        draw.text((200, 200), "CS2023 - Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
+        draw.text((200, 200), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
         draw.text((200, 260), "Diametro de un Arbol", font=f_intro_t, fill=(255, 255, 255))
         draw.text((200, 350), "Algoritmo de los dos BFS en tiempo O(V + E)", font=f_intro_s, fill=(234, 179, 8))
         draw.text((200, 420), "Proyecto 2 - Integrantes del Grupo", font=f_intro_b, fill=(156, 163, 175))
@@ -110,7 +110,7 @@ def generar_fotogramas(data, carpeta_salida):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas,
-                      "El diametro es la mayor distancia en aristas entre dos nodos cualesquiera.",
+                      "El diametro es la mayor distancia en aristas entre dos nodos.",
                       distancias, "Definicion del problema")
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
@@ -256,10 +256,10 @@ def main():
         res = subprocess.run(cmd_fallback, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if res.returncode == 0:
-        print(f"Video generado en: {video_salida}")
+        print(f"Videito generado en: {video_salida}")
         shutil.rmtree(carpeta_fotogramas)
     else:
-        print("Error al generar el video con ffmpeg")
+        print("Error al generar el video con ffmpeg :c")
         sys.exit(1)
 
 if __name__ == "__main__":
