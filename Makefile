@@ -24,7 +24,7 @@ video: main
 	python3 animacion/animador.py
 
 clean:
-	rm -f main test_runner output/traza.json output/video_diametro.mp4
+	rm -f main test_runner output/traza.json output/traza_estrella.json output/video_diametro.mp4 output/subtitulos.srt
 	rm -rf output/fotogramas
 
 .PHONY: all run test video clean

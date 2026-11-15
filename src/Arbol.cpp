@@ -106,6 +106,24 @@ ResultadoDiametro Arbol::calcularDiametro(int nodoInicial) const {
     return resultado;
 }
 
+Arbol Arbol::cargarDesdeArchivo(const string& ruta) {
+    ifstream in(ruta);
+    if (!in.is_open()) {
+        cerr << "No se pudo abrir el archivo: " << ruta << endl;
+        return Arbol(0);
+    }
+    int numVertices;
+    if (!(in >> numVertices)) {
+        return Arbol(0);
+    }
+    Arbol nuevoArbol(numVertices);
+    int u, v;
+    while (in >> u >> v) {
+        nuevoArbol.agregarArista(u, v);
+    }
+    return nuevoArbol;
+}
+
 void Arbol::exportarTraza(const string& rutaArchivo, const ResultadoDiametro& resultado) const {
     ofstream out(rutaArchivo);
     if (!out.is_open()) {
@@ -179,4 +197,3 @@ void Arbol::exportarTraza(const string& rutaArchivo, const ResultadoDiametro& re
     out << "}\n";
     out.close();
 }
-

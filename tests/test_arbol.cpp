@@ -73,6 +73,20 @@ void testArbolAsimetrico() {
     cout << "[PASS] Test Arbol Asimetrico" << endl;
 }
 
+void testCargarDesdeArchivo() {
+    Arbol a = Arbol::cargarDesdeArchivo("data/arbol_general.txt");
+    assert(a.obtenerN() == 9);
+    ResultadoDiametro res = a.calcularDiametro(0);
+    assert(res.diametro == 6);
+
+    Arbol b = Arbol::cargarDesdeArchivo("data/caso_estrella.txt");
+    assert(b.obtenerN() == 6);
+    ResultadoDiametro resB = b.calcularDiametro(1);
+    assert(resB.diametro == 2);
+
+    cout << "[PASS] Test Carga Desde Archivo" << endl;
+}
+
 int main() {
     cout << "--- Ejecutando Pruebas Unitarias del Arbol ---" << endl;
     testUnSoloNodo();
@@ -81,7 +95,7 @@ int main() {
     testGrafoLinea();
     testArbolBinarioCompleto();
     testArbolAsimetrico();
+    testCargarDesdeArchivo();
     cout << "--- Todas las pruebas pasaron con exito! ---" << endl;
     return 0;
 }
-

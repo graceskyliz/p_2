@@ -38,8 +38,8 @@ public:
     ResultadoBFS ejecutarBFS(int inicio) const;
     ResultadoDiametro calcularDiametro(int nodoInicial = 0) const;
 
+    static Arbol cargarDesdeArchivo(const string& ruta);
     void exportarTraza(const string& rutaArchivo, const ResultadoDiametro& resultado) const;
 };
 
 #endif
-
