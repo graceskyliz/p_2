@@ -4,13 +4,6 @@
 
 ---
 
-## Integrantes
-- Integrante 1 (Código)
-- Integrante 2 (Código)
-- Integrante 3 (Código)
-
----
-
 ## 1. Descripción del Proyecto
 
 El objetivo de este proyecto es implementar y explicar de forma visual el algoritmo para encontrar el **diámetro de un árbol** no ponderado. El diámetro se define como la mayor distancia (en cantidad de aristas) entre cualquier par de nodos del árbol.
