@@ -2,8 +2,6 @@ import os
 import sys
 import json
 import math
-import wave
-import struct
 import shutil
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
@@ -190,11 +188,11 @@ def generar_fotogramas(data_general, data_estrella, carpeta_salida):
         draw.text((150, 260), "Algoritmo de los dos BFS en tiempo lineal O(V)", font=f_intro_s, fill=(234, 179, 8))
         draw.line([(150, 310), (1130, 310)], fill=(55, 65, 81), width=2)
         
-        draw.text((150, 340), "Integrantes del Grupo:", font=f_intro_s, fill=(255, 255, 255))
+        draw.text((150, 340), "Integrante:", font=f_intro_s, fill=(255, 255, 255))
         draw.text((180, 385), "- Gracia Luz Mendoza Palacios", font=f_intro_b, fill=(201, 209, 217))
-    
-        draw.text((150, 490), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
-        draw.text((150, 530), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
+        
+        draw.text((150, 470), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
+        draw.text((150, 510), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -265,8 +263,8 @@ def generar_fotogramas(data_general, data_estrella, carpeta_salida):
         draw.line([(380, 290), (900, 290)], fill=(55, 65, 81), width=2)
         draw.text((420, 320), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
         draw.text((460, 370), "Gracia Luz Mendoza Palacios", font=f_intro_b, fill=(201, 209, 217))
-        draw.text((450, 470), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
-        draw.text((560, 520), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
+        draw.text((450, 450), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
+        draw.text((560, 490), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -274,7 +272,7 @@ def generar_fotogramas(data_general, data_estrella, carpeta_salida):
 
 def generar_subtitulos(ruta_srt):
     subtitulos = [
-        ("00:00:00,000", "00:00:02,300", "Proyecto 2: Diametro de un Arbol. Integrantes: Gracia Luz Mendoza Palacios."),
+        ("00:00:00,000", "00:00:02,300", "Proyecto 2: Diametro de un Arbol. Integrante: Gracia Luz Mendoza Palacios."),
         ("00:00:02,300", "00:00:04,500", "El diametro es la distancia maxima entre dos nodos cualesquiera en un arbol no ponderado."),
         ("00:00:04,500", "00:00:09,000", "Paso 1: Iniciamos un primer BFS desde el nodo 0 para ubicar el vertice u mas alejado."),
         ("00:00:09,000", "00:00:11,000", "Fin de fase 1: Se identifica el vertice extremo u = 8 a distancia 4."),
@@ -289,65 +287,6 @@ def generar_subtitulos(ruta_srt):
     with open(ruta_srt, "w", encoding="utf-8") as f:
         for idx, (inicio, fin, texto) in enumerate(subtitulos, 1):
             f.write(f"{idx}\n{inicio} --> {fin}\n{texto}\n\n")
-
-def generar_audio_narracion(ruta_audio_salida, duracion_total_seg):
-    guion_locucion = [
-        (0.0, "Proyecto dos: Diametro de un Arbol. Integrantes: Gracia Luz Mendoza Palacios."),
-        (2.3, "El diametro de un arbol es el camino mas largo entre cualquier par de nodos."),
-        (4.5, "Paso uno: Iniciamos una busqueda en anchura desde el nodo cero para hallar el nodo u mas lejano."),
-        (9.0, "Se alcanza el extremo u igual a ocho a distancia cuatro."),
-        (11.0, "Paso dos: Ejecutamos un segundo BFS desde el extremo u igual a ocho."),
-        (15.5, "Se alcanza el extremo opuesto v igual a cinco a distancia seis."),
-        (17.5, "Paso tres: Reconstruimos el camino diametral de longitud seis aristas."),
-        (20.5, "Caso de borde: En un grafo estrella todas las hojas estan a distancia dos pasando por el centro."),
-        (22.5, "El algoritmo verifica que el diametro en estrella es dos de forma lineal."),
-        (26.5, "Complejidad: El tiempo total es de orden N lineal y la memoria auxiliar es de orden N."),
-        (29.0, "Creditos del proyecto: Algoritmos y Estructuras de Datos.")
-    ]
-
-    espeak_cmd = shutil.which("espeak-ng") or shutil.which("espeak")
-    if not espeak_cmd:
-        return False
-
-    temp_dir = "output/tmp_audio"
-    os.makedirs(temp_dir, exist_ok=True)
-
-    sample_rate = 22050
-    total_samples = int(math.ceil(duracion_total_seg * sample_rate))
-    audio_buffer = [0] * total_samples
-
-    for idx, (t_inicio, texto) in enumerate(guion_locucion):
-        wav_parcial = os.path.join(temp_dir, f"seg_{idx}.wav")
-        cmd = [espeak_cmd, "-v", "es-la", "-s", "145", "-w", wav_parcial, texto]
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if res.returncode == 0 and os.path.exists(wav_parcial):
-            try:
-                with wave.open(wav_parcial, "rb") as wf:
-                    n_channels = wf.getnchannels()
-                    s_width = wf.getsampwidth()
-                    s_rate = wf.getframerate()
-                    frames = wf.readframes(wf.getnframes())
-
-                if s_width == 2 and n_channels == 1:
-                    raw_data = struct.unpack(f"<{int(len(frames) / 2)}h", frames)
-                    start_idx = int(t_inicio * sample_rate)
-                    for j, val in enumerate(raw_data):
-                        pos = start_idx + int(j * sample_rate / s_rate)
-                        if pos < total_samples:
-                            audio_buffer[pos] = max(-32768, min(32767, audio_buffer[pos] + val))
-            except Exception:
-                pass
-
-    shutil.rmtree(temp_dir, ignore_errors=True)
-
-    with wave.open(ruta_audio_salida, "wb") as out_wf:
-        out_wf.setnchannels(1)
-        out_wf.setsampwidth(2)
-        out_wf.setframerate(sample_rate)
-        packed_frames = struct.pack(f"<{len(audio_buffer)}h", *audio_buffer)
-        out_wf.writeframes(packed_frames)
-
-    return True
 
 def main():
     ruta_traza_general = "output/traza.json"
@@ -366,68 +305,34 @@ def main():
 
     carpeta_fotogramas = "output/fotogramas"
     fps = 24
-    total_frames = generar_fotogramas(data_general, data_estrella, carpeta_fotogramas)
-    duracion_seg = total_frames / float(fps)
-
-    ruta_audio = "output/audio_completo.wav"
-    audio_exitoso = generar_audio_narracion(ruta_audio, duracion_seg)
+    generar_fotogramas(data_general, data_estrella, carpeta_fotogramas)
 
     video_salida = "output/video_diametro.mp4"
 
-    if audio_exitoso and os.path.exists(ruta_audio):
-        cmd = [
-            "ffmpeg", "-y",
-            "-framerate", str(fps),
-            "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-            "-i", ruta_audio,
-            "-c:v", "libopenh264",
-            "-pix_fmt", "yuv420p",
-            "-c:a", "aac",
-            "-b:a", "128k",
-            "-shortest",
-            video_salida
-        ]
-    else:
-        cmd = [
-            "ffmpeg", "-y",
-            "-framerate", str(fps),
-            "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-            "-c:v", "libopenh264",
-            "-pix_fmt", "yuv420p",
-            video_salida
-        ]
+    cmd = [
+        "ffmpeg", "-y",
+        "-framerate", str(fps),
+        "-i", f"{carpeta_fotogramas}/frame_%04d.png",
+        "-c:v", "libopenh264",
+        "-pix_fmt", "yuv420p",
+        video_salida
+    ]
 
     res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if res.returncode != 0:
-        if audio_exitoso and os.path.exists(ruta_audio):
-            cmd_fallback = [
-                "ffmpeg", "-y",
-                "-framerate", str(fps),
-                "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-                "-i", ruta_audio,
-                "-c:v", "mpeg4",
-                "-pix_fmt", "yuv420p",
-                "-c:a", "aac",
-                "-b:a", "128k",
-                "-shortest",
-                video_salida
-            ]
-        else:
-            cmd_fallback = [
-                "ffmpeg", "-y",
-                "-framerate", str(fps),
-                "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-                "-c:v", "mpeg4",
-                "-pix_fmt", "yuv420p",
-                video_salida
-            ]
+        cmd_fallback = [
+            "ffmpeg", "-y",
+            "-framerate", str(fps),
+            "-i", f"{carpeta_fotogramas}/frame_%04d.png",
+            "-c:v", "mpeg4",
+            "-pix_fmt", "yuv420p",
+            video_salida
+        ]
         res = subprocess.run(cmd_fallback, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if res.returncode == 0:
         print(f"Video generado exitosamente: {video_salida}")
         shutil.rmtree(carpeta_fotogramas, ignore_errors=True)
-        if os.path.exists(ruta_audio):
-            os.remove(ruta_audio)
     else:
         print("Error al generar el video con ffmpeg")
         sys.exit(1)

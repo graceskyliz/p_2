@@ -23,8 +23,11 @@ video: main
 	./main
 	python3 animacion/animador.py
 
-clean:
-	rm -f main test_runner output/traza.json output/traza_estrella.json output/video_diametro.mp4 output/subtitulos.srt
-	rm -rf output/fotogramas
+pdf:
+	python3 docs/generar_pdf.py
 
-.PHONY: all run test video clean
+clean:
+	rm -f main test_runner output/traza.json output/traza_estrella.json output/video_diametro.mp4 output/subtitulos.srt output/audio_completo.wav docs/informe_final.pdf
+	rm -rf output/fotogramas output/tmp_audio
+
+.PHONY: all run test video pdf clean
