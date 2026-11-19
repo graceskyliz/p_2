@@ -33,10 +33,6 @@ proyecto_2/
 │   ├── arbol_general.txt     # Árbol ilustrativo (9 nodos)
 │   ├── caso_estrella.txt     # Caso de borde: grafo estrella (6 nodos)
 │   └── caso_linea.txt        # Caso de borde: grafo línea (5 nodos)
-├── docs/
-│   ├── generar_pdf.py        # Generador del informe final en PDF (4 páginas)
-│   ├── informe_final.pdf     # Informe técnico final en PDF (4 páginas)
-│   └── informe_final.md      # Versión en Markdown del informe final
 ├── src/
 │   ├── Arbol.hpp             # Declaración de la clase Arbol y estructuras
 │   ├── Arbol.cpp             # Implementación de adyacencia y doble BFS
@@ -48,7 +44,6 @@ proyecto_2/
 └── output/
     ├── traza.json            # Traza JSON del árbol general
     ├── traza_estrella.json   # Traza JSON del caso de borde estrella
-    ├── subtitulos.srt        # Subtítulos sincronizados
     └── video_diametro.mp4    # Video generado de la animación
 ```
 
@@ -93,21 +88,15 @@ También se puede evaluar cualquier árbol personalizado:
 ```bash
 make video
 ```
-Ejecuta la lógica en C++ y genera la animación en `output/video_diametro.mp4` junto con `output/subtitulos.srt`. El video incluye:
+Ejecuta la lógica en C++ y genera la animación en `output/video_diametro.mp4`. El video incluye:
 1. Portada con título, integrante y profesor.
 2. Definición formal del diámetro.
 3. Demostración animada paso a paso del árbol general (BFS 1, BFS 2 y camino diametral en dorado).
 4. Demostración animada del caso de borde (grafo estrella con distribución radial y diámetro 2).
 5. Cuadro de análisis de complejidad temporal y espacial $O(V)$.
-6. Créditos finales del proyecto.
 
-### 4.4 Generar el informe técnico final en PDF (4 páginas)
-```bash
-make pdf
-```
-Genera automáticamente el documento `docs/informe_final.pdf`, formateado a exactamente 4 páginas según la rúbrica de entrega.
 
-### 4.5 Limpiar archivos generados
+### 4.4 Limpiar archivos generados
 ```bash
 make clean
 ```
@@ -118,17 +107,3 @@ make clean
 
 - **Complejidad Temporal:** En un árbol con $V$ vértices y $E = V - 1$ aristas, el primer BFS toma $O(V + E) = O(V)$, el segundo BFS toma $O(V + E) = O(V)$ y la reconstrucción toma $O(D) \le O(V)$. El tiempo total es **$O(V)$**, estrictamente lineal.
 - **Complejidad Espacial:** Requiere listas de adyacencia ($2V - 2$ enteros), arreglos de distancias ($V$), padres ($V$) y la cola de exploración ($V$). La memoria auxiliar es **$O(V)$**.
-
----
-
-## 6. Estado del Proyecto: 100% Completado
-
-- [x] Implementación completa de la estructura `Arbol` en C++ con listas de adyacencia dinámicas y carga desde archivos.
-- [x] Algoritmo de dos BFS y reconstrucción del camino diametral en tiempo $O(V)$.
-- [x] Batería de 7 pruebas unitarias con verificación automática de casos de borde.
-- [x] Exportador estructurado de trazas en formato JSON.
-- [x] Generador de animación vectorial en Python con Pillow y FFmpeg a 24 fps.
-- [x] Demostración visual de la instancia ilustrativa general y del caso de borde del grafo estrella.
-- [x] Archivo de subtítulos sincronizados en formato SRT (`output/subtitulos.srt`).
-- [x] Informe técnico final en PDF de exactamente 4 páginas (`docs/informe_final.pdf`) y versión Markdown (`docs/informe_final.md`).
-- [x] Código limpio, sin comentarios y con estilo de programación universitario.
