@@ -18,7 +18,7 @@ Para calcularlo en tiempo estrictamente lineal $O(V)$, se emplea el algoritmo de
 2. **Segundo BFS:** Parte desde $u$ y encuentra el nodo más distante $v$.
 3. **Resultado:** La distancia entre $u$ y $v$ es el diámetro del árbol, y el camino se reconstruye retrocediendo por el arreglo de padres desde $v$ hasta $u$.
 
-La lógica algorítmica y la estructura del árbol están implementadas en C++17 (`src/`), la cual exporta los datos de ejecución a formato JSON (`output/`). Un script en Python (`animacion/animador.py`) interpreta la traza y compila un video educativo en MP4 (`output/video_diametro.mp4`) a 24 fps con visualización gráfica y subtítulos sincronizados (`output/subtitulos.srt`).
+La lógica algorítmica y la estructura del árbol están implementadas en C++17 (`src/`), la cual exporta los datos de ejecución a formato JSON (`output/`). Un script en Python (`animacion/animador.py`) interpreta la traza y compila un video educativo en MP4 (`output/video_diametro.mp4`) a 24 fps con visualización gráfica, locución explicativa y subtítulos sincronizados (`output/subtitulos.srt`).
 
 ---
 
@@ -34,6 +34,12 @@ proyecto_2/
 │   ├── arbol_general.txt     # Árbol ilustrativo (9 nodos)
 │   ├── caso_estrella.txt     # Caso de borde: grafo estrella (6 nodos)
 │   └── caso_linea.txt        # Caso de borde: grafo línea (5 nodos)
+├── docs/
+│   ├── generar_pdf.py        # Generador del informe final en PDF (4 páginas)
+│   ├── informe_final.pdf     # Informe técnico final en PDF (4 páginas)
+│   ├── informe_final.md      # Versión en Markdown del informe final
+│   ├── informe_avance_50.md  # Informe histórico del hito al 50%
+│   └── informe_avance_70.md  # Informe histórico del hito al 70%
 ├── src/
 │   ├── Arbol.hpp             # Declaración de la clase Arbol y estructuras
 │   ├── Arbol.cpp             # Implementación de adyacencia y doble BFS
@@ -41,11 +47,12 @@ proyecto_2/
 ├── tests/
 │   └── test_arbol.cpp        # 7 pruebas unitarias automatizadas
 ├── animacion/
-│   └── animador.py           # Motor de animación y generación de video MP4
+│   └── animador.py           # Motor de animación, síntesis vocal y video MP4
 └── output/
     ├── traza.json            # Traza JSON del árbol general
     ├── traza_estrella.json   # Traza JSON del caso de borde estrella
-    └── video_diametro.mp4    # Video generado de la animación
+    ├── subtitulos.srt        # Subtítulos sincronizados
+    └── video_diametro.mp4    # Video generado de la animación con audio
 ```
 
 ---
@@ -56,6 +63,7 @@ proyecto_2/
 - `python3` (versión 3.8 o superior)
 - Librería `Pillow` de Python (`pip install Pillow`)
 - `ffmpeg` instalado en el sistema
+- `espeak-ng` (opcional, para síntesis de voz en la animación)
 
 ---
 
@@ -85,17 +93,17 @@ También se puede evaluar cualquier árbol personalizado:
 ./main data/caso_linea.txt output/traza_linea.json
 ```
 
-### 4.3 Generar el video educativo y subtítulos
+### 4.3 Generar el video educativo con audio y subtítulos
 ```bash
 make video
 ```
-Ejecuta la lógica en C++ y genera la animación en `output/video_diametro.mp4` junto con `output/subtitulos.srt`. El video incluye:
-1. Portada con título, integrante y profesor.
+Ejecuta la lógica en C++ y genera la animación completa en `output/video_diametro.mp4` junto con `output/subtitulos.srt`. El video incluye:
+1. Portada con título, integrantes y profesor.
 2. Definición formal del diámetro.
 3. Demostración animada paso a paso del árbol general (BFS 1, BFS 2 y camino diametral en dorado).
 4. Demostración animada del caso de borde (grafo estrella con distribución radial y diámetro 2).
 5. Cuadro de análisis de complejidad temporal y espacial $O(V)$.
-6. Créditos finales del proyecto.
+6. Créditos finales del equipo.
 
 ### 4.4 Generar el informe técnico final en PDF (4 páginas)
 ```bash
@@ -125,6 +133,7 @@ make clean
 - [x] Exportador estructurado de trazas en formato JSON.
 - [x] Generador de animación vectorial en Python con Pillow y FFmpeg a 24 fps.
 - [x] Demostración visual de la instancia ilustrativa general y del caso de borde del grafo estrella.
+- [x] Locución explicativa en español sintetizada e integrada en la pista de audio del video MP4.
 - [x] Archivo de subtítulos sincronizados en formato SRT (`output/subtitulos.srt`).
 - [x] Informe técnico final en PDF de exactamente 4 páginas (`docs/informe_final.pdf`) y versión Markdown (`docs/informe_final.md`).
 - [x] Código limpio, sin comentarios y con estilo de programación universitario.
