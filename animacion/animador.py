@@ -1,6 +1,9 @@
 import os
 import sys
 import json
+import math
+import wave
+import struct
 import shutil
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
@@ -19,7 +22,7 @@ def obtener_fuente(tamano):
                 pass
     return ImageFont.load_default()
 
-def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtitulo, distancias_mostradas, fase_texto):
+def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtitulo, distancias_mostradas, fase_texto, titulo_graf="CS2023 - Diametro de un Arbol"):
     draw.rectangle([(0, 0), (1280, 720)], fill=(20, 24, 33))
 
     f_titulo = obtener_fuente(28)
@@ -28,7 +31,7 @@ def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtit
     f_dist = obtener_fuente(14)
     f_fase = obtener_fuente(18)
 
-    draw.text((40, 25), "AED - Diametro de un Arbol", font=f_titulo, fill=(240, 246, 252))
+    draw.text((40, 25), titulo_graf, font=f_titulo, fill=(240, 246, 252))
     draw.text((40, 65), fase_texto, font=f_fase, fill=(88, 166, 255))
     draw.text((40, 95), subtitulo, font=f_sub, fill=(201, 209, 217))
 
@@ -68,50 +71,20 @@ def dibujar_arbol(draw, data, posiciones, colores_nodos, aristas_activas, subtit
     f_pie = obtener_fuente(16)
     draw.text((60, 663), "Gris: sin visitar | Azul: BFS 1 | Violeta: BFS 2 | Naranja/Rojo: Extremos | Amarillo: Camino", font=f_pie, fill=(156, 163, 175))
 
-def generar_fotogramas(data, carpeta_salida):
-    if os.path.exists(carpeta_salida):
-        shutil.rmtree(carpeta_salida)
-    os.makedirs(carpeta_salida, exist_ok=True)
+def animar_escenario_arbol(data, posiciones, titulo_escena, carpeta_salida, frame_inicial):
+    fotograma = frame_inicial
+    n = data["n"]
 
-    posiciones = {
-        0: (640, 180),
-        1: (440, 290),
-        2: (840, 290),
-        3: (320, 410),
-        4: (540, 410),
-        5: (740, 410),
-        6: (960, 410),
-        7: (540, 520),
-        8: (540, 620)
-    }
-
-    fotograma = 0
-
-    f_intro_t = obtener_fuente(44)
-    f_intro_s = obtener_fuente(26)
-    f_intro_b = obtener_fuente(20)
-
-    for _ in range(60):
-        img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
-        draw = ImageDraw.Draw(img)
-        draw.text((200, 200), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
-        draw.text((200, 260), "Diametro de un Arbol", font=f_intro_t, fill=(255, 255, 255))
-        draw.text((200, 350), "Algoritmo de los dos BFS en tiempo O(V + E)", font=f_intro_s, fill=(234, 179, 8))
-        draw.text((200, 420), "Proyecto 2 - Integrantes del Grupo", font=f_intro_b, fill=(156, 163, 175))
-        draw.line([(200, 325), (1080, 325)], fill=(55, 65, 81), width=2)
-        img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
-        fotograma += 1
-
-    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(data["n"])}
+    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(n)}
     aristas_activas = set()
     distancias = {}
 
-    for _ in range(40):
+    for _ in range(35):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas,
-                      "El diametro es la mayor distancia en aristas entre dos nodos.",
-                      distancias, "Definicion del problema")
+                      "Propiedad: Desde cualquier nodo inicial s, el nodo mas lejano u es un extremo del diametro.",
+                      distancias, f"{titulo_escena} - Estructura Inicial", titulo_escena)
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
@@ -123,28 +96,28 @@ def generar_fotogramas(data, carpeta_salida):
     for idx, u in enumerate(orden1):
         colores[u] = ((30, 144, 255), (255, 255, 255))
         distancias[u] = dists1[u]
-        num_frames = 15 if idx > 0 else 25
+        num_frames = 12 if idx > 0 else 20
         for _ in range(num_frames):
             img = Image.new("RGB", (1280, 720))
             draw = ImageDraw.Draw(img)
-            sub = f"Visitando nodo {u} | Distancia calculada = {dists1[u]}"
+            sub = f"BFS 1: Visitando nodo {u} | Distancia acumulada desde origen = {dists1[u]}"
             dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                          f"Paso 1: Primer BFS desde el nodo {inicio_bfs1}")
+                          f"{titulo_escena} - Paso 1: BFS desde nodo {inicio_bfs1}", titulo_escena)
             img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
             fotograma += 1
 
     nodo_u = data["nodo_u"]
     colores[nodo_u] = ((245, 158, 11), (255, 255, 255))
-    for _ in range(45):
+    for _ in range(35):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
-        sub = f"Nodo mas lejano alcanzado: u = {nodo_u} (distancia maxima = {bfs1['distancia_max']})"
+        sub = f"Extremo encontrado: u = {nodo_u} (distancia maxima = {bfs1['distancia_max']})"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      "Fin del Paso 1: Primer extremo encontrado")
+                      f"{titulo_escena} - Fin Paso 1: Primer extremo", titulo_escena)
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
-    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(data["n"])}
+    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(n)}
     colores[nodo_u] = ((245, 158, 11), (255, 255, 255))
     distancias = {nodo_u: 0}
 
@@ -156,29 +129,29 @@ def generar_fotogramas(data, carpeta_salida):
         if u != nodo_u:
             colores[u] = ((168, 85, 247), (255, 255, 255))
         distancias[u] = dists2[u]
-        num_frames = 15 if idx > 0 else 25
+        num_frames = 12 if idx > 0 else 20
         for _ in range(num_frames):
             img = Image.new("RGB", (1280, 720))
             draw = ImageDraw.Draw(img)
-            sub = f"Visitando nodo {u} | Distancia desde nodo {nodo_u} = {dists2[u]}"
+            sub = f"BFS 2: Visitando nodo {u} | Distancia desde extremo u({nodo_u}) = {dists2[u]}"
             dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                          f"Paso 2: Segundo BFS desde el extremo u = {nodo_u}")
+                          f"{titulo_escena} - Paso 2: BFS desde extremo u = {nodo_u}", titulo_escena)
             img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
             fotograma += 1
 
     nodo_v = data["nodo_v"]
     colores[nodo_v] = ((239, 68, 68), (255, 255, 255))
-    for _ in range(45):
+    for _ in range(35):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
-        sub = f"Nodo mas lejano alcanzado: v = {nodo_v} (distancia maxima = {bfs2['distancia_max']})"
+        sub = f"Extremo opuesto encontrado: v = {nodo_v} (distancia maxima = {bfs2['distancia_max']})"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      "Fin del Paso 2: Segundo extremo encontrado")
+                      f"{titulo_escena} - Fin Paso 2: Segundo extremo", titulo_escena)
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
     camino = data["camino"]
-    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(data["n"])}
+    colores = {i: ((45, 55, 72), (160, 174, 192)) for i in range(n)}
     for nodo_c in camino:
         colores[nodo_c] = ((16, 185, 129), (255, 255, 255))
     colores[nodo_u] = ((245, 158, 11), (255, 255, 255))
@@ -188,79 +161,280 @@ def generar_fotogramas(data, carpeta_salida):
         aristas_activas.add((camino[k], camino[k + 1]))
 
     camino_str = " -> ".join(map(str, camino))
-    for _ in range(75):
+    for _ in range(60):
         img = Image.new("RGB", (1280, 720))
         draw = ImageDraw.Draw(img)
         sub = f"Camino: {camino_str} | Diametro = {data['diametro']} aristas"
         dibujar_arbol(draw, data, posiciones, colores, aristas_activas, sub, distancias,
-                      f"Paso 3: Camino diametral (Longitud = {data['diametro']})")
-        img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
-        fotograma += 1
-
-    for _ in range(60):
-        img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
-        draw = ImageDraw.Draw(img)
-        draw.text((150, 140), "Analisis de Complejidad", font=f_intro_t, fill=(255, 255, 255))
-        draw.line([(150, 210), (1130, 210)], fill=(55, 65, 81), width=2)
-        
-        draw.text((150, 250), "1. Primer BFS desde nodo inicial:", font=f_intro_s, fill=(88, 166, 255))
-        draw.text((200, 295), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
-
-        draw.text((150, 360), "2. Segundo BFS desde nodo u:", font=f_intro_s, fill=(168, 85, 247))
-        draw.text((200, 405), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
-
-        draw.text((150, 470), "3. Reconstruccion del camino:", font=f_intro_s, fill=(16, 185, 129))
-        draw.text((200, 515), "O(D) <= O(N), donde D es el diametro", font=f_intro_b, fill=(201, 209, 217))
-
-        draw.text((150, 580), "Tiempo total: O(N) lineal  |  Memoria auxiliar: O(N)", font=f_intro_s, fill=(234, 179, 8))
-
+                      f"{titulo_escena} - Paso 3: Camino Diametral", titulo_escena)
         img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
         fotograma += 1
 
     return fotograma
 
-def main():
-    ruta_traza = "output/traza.json"
-    if not os.path.exists(ruta_traza):
-        print(f"Error: no se encontro {ruta_traza}")
-        print("Ejecuta primero: make run")
-        sys.exit(1)
+def generar_fotogramas(data_general, data_estrella, carpeta_salida):
+    if os.path.exists(carpeta_salida):
+        shutil.rmtree(carpeta_salida)
+    os.makedirs(carpeta_salida, exist_ok=True)
 
-    with open(ruta_traza, "r") as f:
-        data = json.load(f)
+    fotograma = 0
+    f_intro_t = obtener_fuente(42)
+    f_intro_s = obtener_fuente(24)
+    f_intro_b = obtener_fuente(20)
+
+    for _ in range(55):
+        img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
+        draw = ImageDraw.Draw(img)
+        draw.text((150, 140), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
+        draw.text((150, 190), "Diametro de un Arbol", font=f_intro_t, fill=(255, 255, 255))
+        draw.text((150, 260), "Algoritmo de los dos BFS en tiempo lineal O(V)", font=f_intro_s, fill=(234, 179, 8))
+        draw.line([(150, 310), (1130, 310)], fill=(55, 65, 81), width=2)
+        
+        draw.text((150, 340), "Integrantes del Grupo:", font=f_intro_s, fill=(255, 255, 255))
+        draw.text((180, 385), "- Gracia Luz Mendoza Palacios", font=f_intro_b, fill=(201, 209, 217))
+    
+        draw.text((150, 490), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
+        draw.text((150, 530), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
+        img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
+        fotograma += 1
+
+    posiciones_general = {
+        0: (640, 180),
+        1: (440, 290),
+        2: (840, 290),
+        3: (320, 410),
+        4: (540, 410),
+        5: (740, 410),
+        6: (960, 410),
+        7: (540, 520),
+        8: (540, 620)
+    }
+
+    fotograma = animar_escenario_arbol(data_general, posiciones_general,
+                                       "Instancia Ilustrativa: Arbol General",
+                                       carpeta_salida, fotograma)
+
+    if data_estrella:
+        posiciones_estrella = {0: (640, 360)}
+        radio_estrella = 180
+        for i in range(1, 6):
+            angulo = -math.pi / 2 + (i - 1) * (2 * math.pi / 5)
+            posiciones_estrella[i] = (
+                int(640 + radio_estrella * math.cos(angulo)),
+                int(360 + radio_estrella * math.sin(angulo))
+            )
+
+        for _ in range(40):
+            img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
+            draw = ImageDraw.Draw(img)
+            draw.text((150, 240), "Demostracion de Caso de Borde", font=f_intro_t, fill=(255, 255, 255))
+            draw.line([(150, 310), (1130, 310)], fill=(55, 65, 81), width=2)
+            draw.text((150, 340), "Grafo Estrella (Star Graph) con N = 6 nodos", font=f_intro_s, fill=(88, 166, 255))
+            draw.text((150, 390), "Todas las hojas estan a distancia 1 del centro (nodo 0).", font=f_intro_b, fill=(201, 209, 217))
+            draw.text((150, 430), "El diametro siempre es 2, conectando cualesquiera dos hojas.", font=f_intro_b, fill=(234, 179, 8))
+            img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
+            fotograma += 1
+
+        fotograma = animar_escenario_arbol(data_estrella, posiciones_estrella,
+                                           "Caso de Borde: Grafo Estrella",
+                                           carpeta_salida, fotograma)
+
+    for _ in range(55):
+        img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
+        draw = ImageDraw.Draw(img)
+        draw.text((150, 130), "Analisis de Complejidad Temporal y Espacial", font=f_intro_t, fill=(255, 255, 255))
+        draw.line([(150, 195), (1130, 195)], fill=(55, 65, 81), width=2)
+        
+        draw.text((150, 230), "1. Primer BFS (desde nodo arbitrario s):", font=f_intro_s, fill=(88, 166, 255))
+        draw.text((200, 275), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
+
+        draw.text((150, 335), "2. Segundo BFS (desde extremo u):", font=f_intro_s, fill=(168, 85, 247))
+        draw.text((200, 380), "O(V + E) = O(N + N - 1) = O(N)", font=f_intro_b, fill=(201, 209, 217))
+
+        draw.text((150, 440), "3. Reconstruccion del camino:", font=f_intro_s, fill=(16, 185, 129))
+        draw.text((200, 485), "O(D) <= O(N), donde D es el diametro", font=f_intro_b, fill=(201, 209, 217))
+
+        draw.text((150, 550), "Tiempo total: O(N) lineal  |  Memoria auxiliar: O(N)", font=f_intro_s, fill=(234, 179, 8))
+        img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
+        fotograma += 1
+
+    for _ in range(45):
+        img = Image.new("RGB", (1280, 720), color=(15, 20, 28))
+        draw = ImageDraw.Draw(img)
+        draw.text((450, 220), "Creditos del Proyecto", font=f_intro_t, fill=(255, 255, 255))
+        draw.line([(380, 290), (900, 290)], fill=(55, 65, 81), width=2)
+        draw.text((420, 320), "Algoritmos y Estructuras de Datos", font=f_intro_s, fill=(88, 166, 255))
+        draw.text((460, 370), "Gracia Luz Mendoza Palacios", font=f_intro_b, fill=(201, 209, 217))
+        draw.text((450, 470), "Profesor: Luciano A. Romero Calla", font=f_intro_b, fill=(156, 163, 175))
+        draw.text((560, 520), "Semestre 2026-2", font=f_intro_b, fill=(110, 118, 129))
+        img.save(os.path.join(carpeta_salida, f"frame_{fotograma:04d}.png"))
+        fotograma += 1
+
+    return fotograma
+
+def generar_subtitulos(ruta_srt):
+    subtitulos = [
+        ("00:00:00,000", "00:00:02,300", "Proyecto 2: Diametro de un Arbol. Integrantes: Gracia Luz Mendoza Palacios."),
+        ("00:00:02,300", "00:00:04,500", "El diametro es la distancia maxima entre dos nodos cualesquiera en un arbol no ponderado."),
+        ("00:00:04,500", "00:00:09,000", "Paso 1: Iniciamos un primer BFS desde el nodo 0 para ubicar el vertice u mas alejado."),
+        ("00:00:09,000", "00:00:11,000", "Fin de fase 1: Se identifica el vertice extremo u = 8 a distancia 4."),
+        ("00:00:11,000", "00:00:15,500", "Paso 2: Iniciamos un segundo BFS partiendo desde el vertice extremo u = 8."),
+        ("00:00:15,500", "00:00:17,500", "Fin de fase 2: Se identifica el vertice opuesto v = 5 a distancia maxima 6."),
+        ("00:00:17,500", "00:00:20,500", "Paso 3: Se reconstruye el camino diametral de 6 aristas: 8, 7, 4, 1, 0, 2 y 5."),
+        ("00:00:20,500", "00:00:22,500", "Caso de borde: Analizamos un grafo estrella con un nodo central y hojas."),
+        ("00:00:22,500", "00:00:26,500", "El algoritmo ejecuta los dos BFS en el grafo estrella encontrando el diametro igual a 2."),
+        ("00:00:26,500", "00:00:29,000", "Analisis de complejidad: Dos recorridos BFS lineales toman tiempo O(V + E) = O(N)."),
+        ("00:00:29,000", "00:00:31,000", "Creditos finales del proyecto. CS2023 Algoritmos y Estructuras de Datos.")
+    ]
+    with open(ruta_srt, "w", encoding="utf-8") as f:
+        for idx, (inicio, fin, texto) in enumerate(subtitulos, 1):
+            f.write(f"{idx}\n{inicio} --> {fin}\n{texto}\n\n")
+
+def generar_audio_narracion(ruta_audio_salida, duracion_total_seg):
+    guion_locucion = [
+        (0.0, "Proyecto dos: Diametro de un Arbol. Integrantes: Gracia Luz Mendoza Palacios."),
+        (2.3, "El diametro de un arbol es el camino mas largo entre cualquier par de nodos."),
+        (4.5, "Paso uno: Iniciamos una busqueda en anchura desde el nodo cero para hallar el nodo u mas lejano."),
+        (9.0, "Se alcanza el extremo u igual a ocho a distancia cuatro."),
+        (11.0, "Paso dos: Ejecutamos un segundo BFS desde el extremo u igual a ocho."),
+        (15.5, "Se alcanza el extremo opuesto v igual a cinco a distancia seis."),
+        (17.5, "Paso tres: Reconstruimos el camino diametral de longitud seis aristas."),
+        (20.5, "Caso de borde: En un grafo estrella todas las hojas estan a distancia dos pasando por el centro."),
+        (22.5, "El algoritmo verifica que el diametro en estrella es dos de forma lineal."),
+        (26.5, "Complejidad: El tiempo total es de orden N lineal y la memoria auxiliar es de orden N."),
+        (29.0, "Creditos del proyecto: Algoritmos y Estructuras de Datos.")
+    ]
+
+    espeak_cmd = shutil.which("espeak-ng") or shutil.which("espeak")
+    if not espeak_cmd:
+        return False
+
+    temp_dir = "output/tmp_audio"
+    os.makedirs(temp_dir, exist_ok=True)
+
+    sample_rate = 22050
+    total_samples = int(math.ceil(duracion_total_seg * sample_rate))
+    audio_buffer = [0] * total_samples
+
+    for idx, (t_inicio, texto) in enumerate(guion_locucion):
+        wav_parcial = os.path.join(temp_dir, f"seg_{idx}.wav")
+        cmd = [espeak_cmd, "-v", "es-la", "-s", "145", "-w", wav_parcial, texto]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if res.returncode == 0 and os.path.exists(wav_parcial):
+            try:
+                with wave.open(wav_parcial, "rb") as wf:
+                    n_channels = wf.getnchannels()
+                    s_width = wf.getsampwidth()
+                    s_rate = wf.getframerate()
+                    frames = wf.readframes(wf.getnframes())
+
+                if s_width == 2 and n_channels == 1:
+                    raw_data = struct.unpack(f"<{int(len(frames) / 2)}h", frames)
+                    start_idx = int(t_inicio * sample_rate)
+                    for j, val in enumerate(raw_data):
+                        pos = start_idx + int(j * sample_rate / s_rate)
+                        if pos < total_samples:
+                            audio_buffer[pos] = max(-32768, min(32767, audio_buffer[pos] + val))
+            except Exception:
+                pass
+
+    shutil.rmtree(temp_dir, ignore_errors=True)
+
+    with wave.open(ruta_audio_salida, "wb") as out_wf:
+        out_wf.setnchannels(1)
+        out_wf.setsampwidth(2)
+        out_wf.setframerate(sample_rate)
+        packed_frames = struct.pack(f"<{len(audio_buffer)}h", *audio_buffer)
+        out_wf.writeframes(packed_frames)
+
+    return True
+
+def main():
+    ruta_traza_general = "output/traza.json"
+    ruta_traza_estrella = "output/traza_estrella.json"
+
+    if not os.path.exists(ruta_traza_general):
+        subprocess.run(["make", "run"])
+
+    with open(ruta_traza_general, "r") as f:
+        data_general = json.load(f)
+
+    data_estrella = None
+    if os.path.exists(ruta_traza_estrella):
+        with open(ruta_traza_estrella, "r") as f:
+            data_estrella = json.load(f)
 
     carpeta_fotogramas = "output/fotogramas"
-    total_frames = generar_fotogramas(data, carpeta_fotogramas)
+    fps = 24
+    total_frames = generar_fotogramas(data_general, data_estrella, carpeta_fotogramas)
+    duracion_seg = total_frames / float(fps)
+
+    ruta_audio = "output/audio_completo.wav"
+    audio_exitoso = generar_audio_narracion(ruta_audio, duracion_seg)
 
     video_salida = "output/video_diametro.mp4"
-    
-    cmd = [
-        "ffmpeg", "-y",
-        "-framerate", "24",
-        "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-        "-c:v", "libopenh264",
-        "-pix_fmt", "yuv420p",
-        video_salida
-    ]
-    
-    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    if res.returncode != 0:
-        cmd_fallback = [
+
+    if audio_exitoso and os.path.exists(ruta_audio):
+        cmd = [
             "ffmpeg", "-y",
-            "-framerate", "24",
+            "-framerate", str(fps),
             "-i", f"{carpeta_fotogramas}/frame_%04d.png",
-            "-c:v", "mpeg4",
+            "-i", ruta_audio,
+            "-c:v", "libopenh264",
+            "-pix_fmt", "yuv420p",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            "-shortest",
+            video_salida
+        ]
+    else:
+        cmd = [
+            "ffmpeg", "-y",
+            "-framerate", str(fps),
+            "-i", f"{carpeta_fotogramas}/frame_%04d.png",
+            "-c:v", "libopenh264",
             "-pix_fmt", "yuv420p",
             video_salida
         ]
+
+    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if res.returncode != 0:
+        if audio_exitoso and os.path.exists(ruta_audio):
+            cmd_fallback = [
+                "ffmpeg", "-y",
+                "-framerate", str(fps),
+                "-i", f"{carpeta_fotogramas}/frame_%04d.png",
+                "-i", ruta_audio,
+                "-c:v", "mpeg4",
+                "-pix_fmt", "yuv420p",
+                "-c:a", "aac",
+                "-b:a", "128k",
+                "-shortest",
+                video_salida
+            ]
+        else:
+            cmd_fallback = [
+                "ffmpeg", "-y",
+                "-framerate", str(fps),
+                "-i", f"{carpeta_fotogramas}/frame_%04d.png",
+                "-c:v", "mpeg4",
+                "-pix_fmt", "yuv420p",
+                video_salida
+            ]
         res = subprocess.run(cmd_fallback, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if res.returncode == 0:
-        print(f"Videito generado en: {video_salida}")
-        shutil.rmtree(carpeta_fotogramas)
+        print(f"Video generado exitosamente: {video_salida}")
+        shutil.rmtree(carpeta_fotogramas, ignore_errors=True)
+        if os.path.exists(ruta_audio):
+            os.remove(ruta_audio)
     else:
-        print("Error al generar el video con ffmpeg :c")
+        print("Error al generar el video con ffmpeg")
         sys.exit(1)
+
+    ruta_srt = "output/subtitulos.srt"
+    generar_subtitulos(ruta_srt)
+    print(f"Subtitulos sincronizados generados en: {ruta_srt}")
 
 if __name__ == "__main__":
     main()
