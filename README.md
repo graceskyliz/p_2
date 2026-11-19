@@ -84,7 +84,7 @@ También se puede evaluar cualquier árbol personalizado:
 ./main data/caso_linea.txt output/traza_linea.json
 ```
 
-### 4.3 Generar el video educativo y subtítulos
+### 4.3 Generar el video
 ```bash
 make video
 ```
