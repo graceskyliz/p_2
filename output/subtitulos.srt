@@ -1,0 +1,44 @@
+1
+00:00:00,000 --> 00:00:02,300
+Proyecto 2: Diametro de un Arbol. Integrante: Gracia Luz Mendoza Palacios.
+
+2
+00:00:02,300 --> 00:00:04,500
+El diametro es la distancia maxima entre dos nodos cualesquiera en un arbol no ponderado.
+
+3
+00:00:04,500 --> 00:00:09,000
+Paso 1: Iniciamos un primer BFS desde el nodo 0 para ubicar el vertice u mas alejado.
+
+4
+00:00:09,000 --> 00:00:11,000
+Fin de fase 1: Se identifica el vertice extremo u = 8 a distancia 4.
+
+5
+00:00:11,000 --> 00:00:15,500
+Paso 2: Iniciamos un segundo BFS partiendo desde el vertice extremo u = 8.
+
+6
+00:00:15,500 --> 00:00:17,500
+Fin de fase 2: Se identifica el vertice opuesto v = 5 a distancia maxima 6.
+
+7
+00:00:17,500 --> 00:00:20,500
+Paso 3: Se reconstruye el camino diametral de 6 aristas: 8, 7, 4, 1, 0, 2 y 5.
+
+8
+00:00:20,500 --> 00:00:22,500
+Caso de borde: Analizamos un grafo estrella con un nodo central y hojas.
+
+9
+00:00:22,500 --> 00:00:26,500
+El algoritmo ejecuta los dos BFS en el grafo estrella encontrando el diametro igual a 2.
+
+10
+00:00:26,500 --> 00:00:29,000
+Analisis de complejidad: Dos recorridos BFS lineales toman tiempo O(V + E) = O(N).
+
+11
+00:00:29,000 --> 00:00:31,000
+Creditos finales del proyecto. CS2023 Algoritmos y Estructuras de Datos.
+
